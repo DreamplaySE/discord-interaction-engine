@@ -10,7 +10,6 @@ export type Choices<T> = {
   [key: string]: T;
 };
 
-// Option Types
 export namespace TextCommandOption {
   export enum Type {
     String = "string",
@@ -172,7 +171,6 @@ export namespace TextCommandOption {
   };
 }
 
-// Command System
 type CommandContext<T extends TextCommandOption.Transform> = InteractionContext<CommandInteraction> & {
   options: T;
 }

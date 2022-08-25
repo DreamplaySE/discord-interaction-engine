@@ -42,7 +42,6 @@ export class Hook<T extends HookType> {
   }
 }
 
-//TODO FIX
 export type AnyHookType = HookType.ChannelCreated | HookType.ChannelDeleted;
 export type AnyHook = Hook<HookType.ChannelCreated> | Hook<HookType.ChannelDeleted>;
 

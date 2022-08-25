@@ -56,7 +56,6 @@ export class ListComponent<TCustomData> extends FreeComponent {
       components: [new ActionRowBuilder<ButtonBuilder>().addComponents(
         next,
         previous,
-        // SetPage,
       )],
     };
   };
