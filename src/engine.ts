@@ -1,5 +1,5 @@
 import { Client, ComponentType, Interaction, InteractionType } from "discord.js";
-import { Component, HandledComponent, CustomData, CustomDataHandler, KeyValueStoreStrategy } from "./components";
+import { Component, HandledComponent, CustomDataHandler, KeyValueStoreStrategy, encode, parse } from "./components";
 import { Command, commandAutocompleteHandler, commandHandler, CommandType } from "./commands";
 import Keyv from "keyv";
 import { AnyHook, HookContainer } from "./hooks";
@@ -16,7 +16,7 @@ export class InteractionEngine {
   commands: Record<string, Command> = {};
   components: Record<string, HandledComponent> = {};
   hooks: HookContainer = {};
-  total: number = 0;
+  total = 0;
   private customDataHandler: CustomDataHandler = {
     strategy: KeyValueStoreStrategy.Full,
     store: new Keyv(),
@@ -60,6 +60,7 @@ export class InteractionEngine {
     if (hooks) {
       for (const hook of hooks) {
         this.hooks[hook.type] ??= [];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.hooks[hook.type]!.push(hook as any);
       }
 
@@ -76,7 +77,7 @@ export class InteractionEngine {
   }
 
   async createCustomId<T>(id: string, value?: T): Promise<string> {
-    return await CustomData.encode(id, value, this.customDataHandler);
+    return await encode(id, value, this.customDataHandler);
   }
 
   loadComponent(component: Component) {
@@ -92,61 +93,61 @@ export class InteractionEngine {
 
   async handler(interaction: Interaction): Promise<void> {
     switch (interaction.type) {
-      case InteractionType.ApplicationCommand: {
-        await commandHandler(this.commands, interaction);
+    case InteractionType.ApplicationCommand: {
+      await commandHandler(this.commands, interaction);
         
-        break;
+      break;
+    }
+    case InteractionType.ApplicationCommandAutocomplete: {
+      await commandAutocompleteHandler(this.commands, interaction);
+
+      break;
+    }
+    case InteractionType.MessageComponent:
+    case InteractionType.ModalSubmit: {
+      const data = await parse(interaction.customId, this.customDataHandler);
+
+      if (data === null) {
+        await interaction.reply({
+          ephemeral: true,
+          content: "This interaction has expired.",
+        });
+        return; 
       }
-      case InteractionType.ApplicationCommandAutocomplete: {
-        await commandAutocompleteHandler(this.commands, interaction);
 
-        break;
-      }
-      case InteractionType.MessageComponent:
-      case InteractionType.ModalSubmit: {
-        const data = await CustomData.parse(interaction.customId, this.customDataHandler);
+      const {componentId, customData} = data;
 
-        if (data === null) {
-          await interaction.reply({
-            ephemeral: true,
-            content: "This interaction has expired.",
-          });
-          return; 
-        };
-
-        const {componentId, customData} = data;
-
-        const component = this.components[componentId];
+      const component = this.components[componentId];
       
-        if (!component) throw new Error("Requested component does not exist.");
+      if (!component) throw new Error("Requested component does not exist.");
 
-        if (interaction.type === InteractionType.ModalSubmit) {
-          if (component.type !== ComponentInteractionType.ModalSubmit) throw new Error("Requested components interaction type does not match interaction.");
+      if (interaction.type === InteractionType.ModalSubmit) {
+        if (component.type !== ComponentInteractionType.ModalSubmit) throw new Error("Requested components interaction type does not match interaction.");
   
-          await component.runner({interaction, customData});
-
-          break;
-        }
-        
-        switch (interaction.componentType) {
-          case ComponentType.Button: {
-            if (component.type !== ComponentInteractionType.Button) throw new Error("Requested components interaction type does not match interaction.");
-      
-            await component.runner({interaction, customData});
-      
-            break;
-          }
-          case ComponentType.SelectMenu: {
-            if (component.type !== ComponentInteractionType.SelectMenu) throw new Error("Requested components interaction type does not match interaction.");
-      
-            await component.runner({interaction, customData});
-      
-            break;
-          }
-        }
+        await component.runner({interaction, customData});
 
         break;
       }
+        
+      switch (interaction.componentType) {
+      case ComponentType.Button: {
+        if (component.type !== ComponentInteractionType.Button) throw new Error("Requested components interaction type does not match interaction.");
+      
+        await component.runner({interaction, customData});
+      
+        break;
+      }
+      case ComponentType.SelectMenu: {
+        if (component.type !== ComponentInteractionType.SelectMenu) throw new Error("Requested components interaction type does not match interaction.");
+      
+        await component.runner({interaction, customData});
+      
+        break;
+      }
+      }
+
+      break;
+    }
     }
   }
 }

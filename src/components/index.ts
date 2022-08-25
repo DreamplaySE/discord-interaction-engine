@@ -5,9 +5,6 @@ import { AnyModalSubmitComponent } from "./modalSubmit";
 /** The fundamental component type which allows you to associate other components.*/
 export class BaseComponent {
   associated?: Component[];
-
-  constructor() {
-  }
 }
 
 export type HandledComponent = AnyButtonComponent | AnyModalSubmitComponent | AnySelectMenuComponent;

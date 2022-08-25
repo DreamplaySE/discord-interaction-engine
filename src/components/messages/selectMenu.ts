@@ -45,7 +45,7 @@ export class SelectMenuComponent<TSelectMenuOptions extends SelectMenuOptions, T
     if (max) button.setMaxValues(max);
 
     return button;
-  };
+  }
 
   override runner(context: CustomDataContext<SelectMenuInteraction<CacheType>, TCustomData>): WorthlessPromise {
       
@@ -57,7 +57,7 @@ export class SelectMenuComponent<TSelectMenuOptions extends SelectMenuOptions, T
       options[optionValue] = true;
     }
 
-    return this.runnerFunc({...context, options, optionValues})
+    return this.runnerFunc({...context, options, optionValues});
   }
 
   constructor(func: SelectMenuFunction<TSelectMenuOptions, TCustomData>, {min, max, options}: {

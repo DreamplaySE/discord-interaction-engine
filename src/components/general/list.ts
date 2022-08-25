@@ -58,14 +58,15 @@ export class ListComponent<TCustomData> extends FreeComponent {
         previous,
       )],
     };
-  };
+  }
 
 
   constructor(runner: ListRunner<TCustomData>) {
     const next: ButtonComponent<ListButtonCustomData<TCustomData>> = new ButtonComponent(async ({interaction, customData: data}) => {
       await interaction.deferUpdate();
 
-      let {customData, currentPage} = data;
+      const {customData} = data;
+      let {currentPage} = data;
 
       currentPage += 1;
 
@@ -77,7 +78,8 @@ export class ListComponent<TCustomData> extends FreeComponent {
     const previous: ButtonComponent<ListButtonCustomData<TCustomData>> = new ButtonComponent(async ({interaction, customData: data}) => {
       await interaction.deferUpdate();
 
-      let {customData, currentPage} = data;
+      const {customData} = data;
+      let {currentPage} = data;
 
       currentPage -= 1;
 

@@ -1,5 +1,5 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, MessageOptions } from "discord.js";
-import { CustomDataContext, InteractionContext, Runner } from "../runnerComponent";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, EmbedBuilder, MessageOptions } from "discord.js";
+import { CustomDataContext, Runner } from "../runnerComponent";
 import { ButtonComponent } from "../messages/button";
 import { FreeComponent } from "./free";
 
@@ -35,7 +35,7 @@ export class ConfirmComponent<TCustomData> extends FreeComponent {
         no,
       )],
     };
-  };
+  }
 
 
   constructor(runner: Runner<ButtonInteraction, ConfirmContext<TCustomData>>, data: {

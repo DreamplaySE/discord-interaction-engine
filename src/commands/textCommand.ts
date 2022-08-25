@@ -49,8 +49,7 @@ export namespace TextCommandOption {
     value: T;
   }
 
-  interface AutoCompleteContext extends InteractionContext<AutocompleteInteraction> {
-  }
+  type AutoCompleteContext = InteractionContext<AutocompleteInteraction>
 
   export interface StringOption extends BaseOption {
     type: Type.String;
@@ -107,61 +106,61 @@ export namespace TextCommandOption {
       const {type, required} = option;
       
       switch (type) {
-        case Type.Boolean: {
-          const value = options.get(name)?.value;
-          if (value !== null) result[name] = value;
+      case Type.Boolean: {
+        const value = options.get(name)?.value;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Integer: {
-          const value = options.get(name)?.value;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.Integer: {
+        const value = options.get(name)?.value;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Number: {
-          const value = options.get(name)?.value;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.Number: {
+        const value = options.get(name)?.value;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.String: {
-          const value = options.get(name)?.value;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.String: {
+        const value = options.get(name)?.value;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.User: {
-          const value = options.get(name)?.user;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.User: {
+        const value = options.get(name)?.user;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Role: {
-          const value = options.get(name)?.role;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.Role: {
+        const value = options.get(name)?.role;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Channel: {
-          const value = options.get(name)?.channel;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.Channel: {
+        const value = options.get(name)?.channel;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Mentionable: {
-          const fullValue = options.get(name);
-          const value = fullValue?.member ?? fullValue?.user ?? fullValue?.role;
-          if (value !== null) result[name] = value;
+        break;
+      }
+      case Type.Mentionable: {
+        const fullValue = options.get(name);
+        const value = fullValue?.member ?? fullValue?.user ?? fullValue?.role;
+        if (value !== null) result[name] = value;
           
-          break;
-        }
-        case Type.Attachment: {
-          const value = options.get(name)?.attachment;
-          if (value !== undefined) result[name] = value;
+        break;
+      }
+      case Type.Attachment: {
+        const value = options.get(name)?.attachment;
+        if (value !== undefined) result[name] = value;
           
-          break;
-        }
+        break;
+      }
       }
 
       if (required && (result[name] === undefined)) throw new Error("Required option does not exist on interaction!");
@@ -176,7 +175,7 @@ type CommandContext<T extends TextCommandOption.Transform> = InteractionContext<
 }
 
 
-export class TextCommand<TOptions extends TextCommandOption.Options = {}, TTransform extends TextCommandOption.Transform<TOptions> = TextCommandOption.Transform<TOptions>> extends BaseCommand {
+export class TextCommand<TOptions extends TextCommandOption.Options = Record<string, never>, TTransform extends TextCommandOption.Transform<TOptions> = TextCommandOption.Transform<TOptions>> extends BaseCommand {
   type: CommandType.TextCommand = CommandType.TextCommand;
 
   runnerFunc: Runner<CommandInteraction, CommandContext<TTransform>>;

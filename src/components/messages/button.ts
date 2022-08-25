@@ -14,7 +14,7 @@ export class ButtonComponent<TCustomData> extends RunnerComponent<ComponentInter
   emoji?: ComponentEmojiResolvable;
 
   override runner(context: CustomDataContext<ButtonInteraction<CacheType>, TCustomData>): WorthlessPromise {
-      return this.runnerFunc(context);
+    return this.runnerFunc(context);
   }
 
   async create(customData: TCustomData): Promise<ButtonBuilder> {
@@ -27,7 +27,7 @@ export class ButtonComponent<TCustomData> extends RunnerComponent<ComponentInter
     if (label || !emoji) button.setLabel(label ?? "Unknown");
 
     return button;
-  };
+  }
 
   constructor(func: ButtonFunction<TCustomData>, data?: {
     label?: string;

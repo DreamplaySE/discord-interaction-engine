@@ -3,6 +3,7 @@ import { Component } from "../components";
 import { TypedTypeMap } from "../typings/options";
 import { WorthlessPromise } from "../typings/useful";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface HookContext {}
 
 export enum HookType {

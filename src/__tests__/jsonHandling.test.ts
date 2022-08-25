@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import { TextCommand, TextCommandOption } from "../commands"
-import {commandToJson} from "../commands/jsonHandling"
+import { TextCommand, TextCommandOption } from "../commands";
+import {commandToJson} from "../commands/jsonHandling";
 
 test("Blank text command JSON is correct", () => {
   const name = "command";
@@ -17,8 +18,8 @@ test("Blank text command JSON is correct", () => {
     .setDescription(description)
     .toJSON();
 
-  expect(commandJson).toStrictEqual(correctCommandJson)
-})
+  expect(commandJson).toStrictEqual(correctCommandJson);
+});
 
 test("Text command JSON is correct with string option type", () => {
   const name = "command";
@@ -50,5 +51,5 @@ test("Text command JSON is correct with string option type", () => {
 
   const correctCommandJson = correctCommandJsonBuilder.toJSON();
 
-  expect(commandJson).toStrictEqual(correctCommandJson)
-})
+  expect(commandJson).toStrictEqual(correctCommandJson);
+});

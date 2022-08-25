@@ -50,36 +50,36 @@ export namespace ModalSubmitOption {
       const {type} = option;
       
       switch (type) {
-        case Type.Text: {
-          const value = fields.getTextInputValue(name);
-          result[name] = value;
+      case Type.Text: {
+        const value = fields.getTextInputValue(name);
+        result[name] = value;
           
-          break;
-        }
-        case Type.Date: {
-          const value = fields.getTextInputValue(name);
+        break;
+      }
+      case Type.Date: {
+        const value = fields.getTextInputValue(name);
 
-          if (value === '') {
-            if (option.required) {
-              throw new Error("Required is empty!");
-            };
-
-            result[name] = undefined;
-
-            break;
+        if (value === "") {
+          if (option.required) {
+            throw new Error("Required is empty!");
           }
 
-          const dateMilliseconds = Date.parse(value);
+          result[name] = undefined;
 
-          result[name] = isNaN(dateMilliseconds) ? null : new Date(dateMilliseconds);
-          
           break;
         }
+
+        const dateMilliseconds = Date.parse(value);
+
+        result[name] = isNaN(dateMilliseconds) ? null : new Date(dateMilliseconds);
+          
+        break;
+      }
       }
     }
   
     return result as TTransform;
-  };
+  }
 }
 
 
@@ -96,7 +96,7 @@ type ModalSubmitFunction<
 > = (context: ModalSubmitContext<TCustomData, TTransform>) => WorthlessPromise;
 
 const DATE_PLACEHOLDER = "YYYY-MM-DD";
-const DATE_TIME_PLACEHOLDER = `${DATE_PLACEHOLDER} HH:SS`
+const DATE_TIME_PLACEHOLDER = `${DATE_PLACEHOLDER} HH:SS`;
 
 export class ModalSubmitComponent<
   TCustomData,
@@ -132,48 +132,48 @@ export class ModalSubmitComponent<
       for (const [key, option] of Object.entries(options)) {
         const placeHolder = placeholders?.[key] as any | undefined;
         switch (option.type) {
-          case ModalSubmitOption.Type.Text: {
-            const {label, max, min, placeholder, required, style} = option;
+        case ModalSubmitOption.Type.Text: {
+          const {label, max, min, placeholder, required, style} = option;
 
-            const textInput = new TextInputBuilder()
-              .setCustomId(key)
-              .setLabel(label)
-              .setStyle(style ?? TextInputStyle.Short)
-              .setRequired(required ?? false);
+          const textInput = new TextInputBuilder()
+            .setCustomId(key)
+            .setLabel(label)
+            .setStyle(style ?? TextInputStyle.Short)
+            .setRequired(required ?? false);
             
-            if (max) textInput.setMaxLength(max);
-            if (min) textInput.setMinLength(min);
-            if (placeholder || placeHolder !== undefined) textInput.setPlaceholder(placeHolder ?? placeholder);
+          if (max) textInput.setMaxLength(max);
+          if (min) textInput.setMinLength(min);
+          if (placeholder || placeHolder !== undefined) textInput.setPlaceholder(placeHolder ?? placeholder);
             
-            const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
+          const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
 
-            modal.addComponents(row);
+          modal.addComponents(row);
 
-            break;
-          }
-          case ModalSubmitOption.Type.Date: {
-            const {label, required, time} = option;
-
-            const textInput = new TextInputBuilder()
-              .setCustomId(key)
-              .setLabel(label)
-              .setStyle(TextInputStyle.Short)
-              .setRequired(required ?? false)
-              .setPlaceholder(time ? DATE_TIME_PLACEHOLDER : DATE_PLACEHOLDER);
-            
-            const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
-
-            modal.addComponents(row);
-            
-            break;
-          }
+          break;
         }
-      };
+        case ModalSubmitOption.Type.Date: {
+          const {label, required, time} = option;
+
+          const textInput = new TextInputBuilder()
+            .setCustomId(key)
+            .setLabel(label)
+            .setStyle(TextInputStyle.Short)
+            .setRequired(required ?? false)
+            .setPlaceholder(time ? DATE_TIME_PLACEHOLDER : DATE_PLACEHOLDER);
+            
+          const row = new ActionRowBuilder<TextInputBuilder>().addComponents(textInput);
+
+          modal.addComponents(row);
+            
+          break;
+        }
+        }
+      }
     }
 
     return modal;
 
-  };
+  }
 
   static FromOptions<TOptions extends ModalSubmitOption.Options>(data: {
     title: string;

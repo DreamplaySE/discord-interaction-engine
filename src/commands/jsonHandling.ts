@@ -25,7 +25,7 @@ const choicesToApiChoices = <T extends number | string>(choices: Choices<T>): AP
     .map(([name, value]) => ({
       name,
       value,
-    }))
+    }));
 };
 
 const setDetails = (
@@ -85,58 +85,58 @@ function loadCommandJSON (
  */
 export function commandToJson(key: string, command: Command): RESTPostAPIApplicationCommandsJSONBody {
   switch (command.type) {
-    case CommandType.TextCommand: {
-      const builder = new SlashCommandBuilder();
-      loadCommandJSON(key, command, builder);
+  case CommandType.TextCommand: {
+    const builder = new SlashCommandBuilder();
+    loadCommandJSON(key, command, builder);
       
-      return builder.toJSON();
-    };
-    case CommandType.TextCommandGroup: {
-      const builder = new SlashCommandBuilder();
-      setDetails(key, command, builder);
+    return builder.toJSON();
+  }
+  case CommandType.TextCommandGroup: {
+    const builder = new SlashCommandBuilder();
+    setDetails(key, command, builder);
       
-      for (const [subKey, subCommand] of Object.entries(command.commands)) {
-        switch (subCommand.type) {
-          case CommandType.TextCommand: {
-            const subCommandBuilder = new SlashCommandSubcommandBuilder();
-            loadCommandJSON(subKey, subCommand, subCommandBuilder);
-            builder.addSubcommand(subCommandBuilder);
+    for (const [subKey, subCommand] of Object.entries(command.commands)) {
+      switch (subCommand.type) {
+      case CommandType.TextCommand: {
+        const subCommandBuilder = new SlashCommandSubcommandBuilder();
+        loadCommandJSON(subKey, subCommand, subCommandBuilder);
+        builder.addSubcommand(subCommandBuilder);
 
-            break;
-          }
-          case CommandType.TextCommandSubGroup: {
-            const subCommandGroupBuilder = new SlashCommandSubcommandGroupBuilder();
-            setDetails(subKey, subCommand, subCommandGroupBuilder);
-
-            for (const [subSubKey, subSubCommand] of Object.entries(subCommand.commands)) {                  
-              const subCommandBuilder = new SlashCommandSubcommandBuilder();
-              loadCommandJSON(subSubKey, subSubCommand, subCommandBuilder);
-              subCommandGroupBuilder.addSubcommand(subCommandBuilder);
-            }
-
-            builder.addSubcommandGroup(subCommandGroupBuilder);
-
-            break;
-          }
-        }
+        break;
       }
+      case CommandType.TextCommandSubGroup: {
+        const subCommandGroupBuilder = new SlashCommandSubcommandGroupBuilder();
+        setDetails(subKey, subCommand, subCommandGroupBuilder);
+
+        for (const [subSubKey, subSubCommand] of Object.entries(subCommand.commands)) {                  
+          const subCommandBuilder = new SlashCommandSubcommandBuilder();
+          loadCommandJSON(subSubKey, subSubCommand, subCommandBuilder);
+          subCommandGroupBuilder.addSubcommand(subCommandBuilder);
+        }
+
+        builder.addSubcommandGroup(subCommandGroupBuilder);
+
+        break;
+      }
+      }
+    }
       
-      return builder.toJSON();
-    };
-    case CommandType.UserContext: {
-      const builder = new ContextMenuCommandBuilder()
-        .setName(key)
-        .setType(ApplicationCommandType.User);
+    return builder.toJSON();
+  }
+  case CommandType.UserContext: {
+    const builder = new ContextMenuCommandBuilder()
+      .setName(key)
+      .setType(ApplicationCommandType.User);
       
-      return builder.toJSON();
-    };
-    case CommandType.MessageContext: {
-      const builder = new ContextMenuCommandBuilder()
-        .setName(key)
-        .setType(ApplicationCommandType.Message);
+    return builder.toJSON();
+  }
+  case CommandType.MessageContext: {
+    const builder = new ContextMenuCommandBuilder()
+      .setName(key)
+      .setType(ApplicationCommandType.Message);
       
-      return builder.toJSON();
-    };
+    return builder.toJSON();
+  }
   }
 }
 
@@ -157,82 +157,82 @@ export function addOptions(options: Record<string, TextCommandOption.All> | unde
     const {type} = option;
 
     switch (type) {
-      case TextCommandOption.Type.String: {
-        const optionBuilder = new SlashCommandStringOption();
-        setDetails(optionBuilder);
-        const {autoComplete, choices} = option;
-        if (autoComplete) optionBuilder.setAutocomplete(true);
-        if (choices) {
-          const apiChoices = choicesToApiChoices<string>(choices);
+    case TextCommandOption.Type.String: {
+      const optionBuilder = new SlashCommandStringOption();
+      setDetails(optionBuilder);
+      const {autoComplete, choices} = option;
+      if (autoComplete) optionBuilder.setAutocomplete(true);
+      if (choices) {
+        const apiChoices = choicesToApiChoices<string>(choices);
 
-          optionBuilder.setChoices(...apiChoices);
-        }
+        optionBuilder.setChoices(...apiChoices);
+      }
 
-        builder.addStringOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.Number:
-      case TextCommandOption.Type.Integer: {
-        const optionBuilder = type === TextCommandOption.Type.Number ? new SlashCommandNumberOption() : new SlashCommandIntegerOption();
-        setDetails(optionBuilder);
-        const {min, max, autoComplete, choices} = option;
-        if (min) optionBuilder.setMinValue(min);
-        if (max) optionBuilder.setMaxValue(max);
-        if (autoComplete) optionBuilder.setAutocomplete(true);
-        if (choices) {
-          const apiChoices = choicesToApiChoices<number>(choices);
+      builder.addStringOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.Number:
+    case TextCommandOption.Type.Integer: {
+      const optionBuilder = type === TextCommandOption.Type.Number ? new SlashCommandNumberOption() : new SlashCommandIntegerOption();
+      setDetails(optionBuilder);
+      const {min, max, autoComplete, choices} = option;
+      if (min) optionBuilder.setMinValue(min);
+      if (max) optionBuilder.setMaxValue(max);
+      if (autoComplete) optionBuilder.setAutocomplete(true);
+      if (choices) {
+        const apiChoices = choicesToApiChoices<number>(choices);
 
-          optionBuilder.setChoices(...apiChoices);
-        }
+        optionBuilder.setChoices(...apiChoices);
+      }
 
-        if (type === TextCommandOption.Type.Number) builder.addNumberOption(optionBuilder as SlashCommandNumberOption);
-        else builder.addIntegerOption(optionBuilder as SlashCommandIntegerOption);
-        break;
-      }
-      case TextCommandOption.Type.Boolean: {
-        const optionBuilder = new SlashCommandBooleanOption();
-        setDetails(optionBuilder);
+      if (type === TextCommandOption.Type.Number) builder.addNumberOption(optionBuilder as SlashCommandNumberOption);
+      else builder.addIntegerOption(optionBuilder as SlashCommandIntegerOption);
+      break;
+    }
+    case TextCommandOption.Type.Boolean: {
+      const optionBuilder = new SlashCommandBooleanOption();
+      setDetails(optionBuilder);
         
-        builder.addBooleanOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.Channel: {
-        const optionBuilder = new SlashCommandChannelOption();
-        setDetails(optionBuilder);
-        const {channelTypes} = option;
-        if (channelTypes) optionBuilder.addChannelTypes(...channelTypes);
+      builder.addBooleanOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.Channel: {
+      const optionBuilder = new SlashCommandChannelOption();
+      setDetails(optionBuilder);
+      const {channelTypes} = option;
+      if (channelTypes) optionBuilder.addChannelTypes(...channelTypes);
         
-        builder.addChannelOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.User: {
-        const optionBuilder = new SlashCommandUserOption();
-        setDetails(optionBuilder);
+      builder.addChannelOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.User: {
+      const optionBuilder = new SlashCommandUserOption();
+      setDetails(optionBuilder);
         
-        builder.addUserOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.Role: {
-        const optionBuilder = new SlashCommandRoleOption();
-        setDetails(optionBuilder);
+      builder.addUserOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.Role: {
+      const optionBuilder = new SlashCommandRoleOption();
+      setDetails(optionBuilder);
         
-        builder.addRoleOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.Mentionable: {
-        const optionBuilder = new SlashCommandMentionableOption();
-        setDetails(optionBuilder);
+      builder.addRoleOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.Mentionable: {
+      const optionBuilder = new SlashCommandMentionableOption();
+      setDetails(optionBuilder);
         
-        builder.addMentionableOption(optionBuilder);
-        break;
-      }
-      case TextCommandOption.Type.Attachment: {
-        const optionBuilder = new SlashCommandAttachmentOption();
-        setDetails(optionBuilder);
+      builder.addMentionableOption(optionBuilder);
+      break;
+    }
+    case TextCommandOption.Type.Attachment: {
+      const optionBuilder = new SlashCommandAttachmentOption();
+      setDetails(optionBuilder);
         
-        builder.addAttachmentOption(optionBuilder);
-        break;
-      }
+      builder.addAttachmentOption(optionBuilder);
+      break;
+    }
     }
   }
-};
+}

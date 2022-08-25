@@ -1,7 +1,8 @@
 {
   "name": "discord-interaction-engine",
   "version": "14.0.0",
-  "main": "./src/index.ts",
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "run build",
     "build": "rm -rf dist && tsc",

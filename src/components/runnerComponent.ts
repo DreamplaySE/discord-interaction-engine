@@ -58,9 +58,10 @@ export class RunnerComponent<TInteractionType extends ComponentRunnerInteraction
    *
    * @param context The context to run the component with.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async runner(context: CustomDataContext<RunnerInteractionMap[TInteractionType], TCustomData>): Promise<unknown | void> {
     throw new Error("Not implemented for child component.");
-  };
+  }
 
   constructor(type: TInteractionType, runnerFunc: (context: TContext) => WorthlessPromise) {
     super();
