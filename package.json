@@ -1,6 +1,8 @@
 {
   "name": "discord-interaction-engine",
   "version": "14.0.0",
+  "author": "Lukas Friman @ lukasfriman.com",
+  "license": "MIT",
   "main": "dist/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
